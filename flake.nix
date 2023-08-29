@@ -15,13 +15,6 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       unstablePkgs = unstable.legacyPackages.${system};
-      genHomeConfiguration = args:
-        home-manager.lib.homeManagerConfiguration (rec {
-          system = args.system or "x86_64-linux";
-          inherit pkgs;
-          modules = [ ./home.nix ];
-          extraSpecialArgs = { inherit unstablePkgs; };
-        } // args);
     in {
       homeConfigurations = {
         dwave = home-manager.lib.homeManagerConfiguration {
