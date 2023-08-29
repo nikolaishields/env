@@ -23,8 +23,8 @@
           extraSpecialArgs = { inherit unstablePkgs; };
         } // args);
     in {
-      homeConfigurations.dwave =
-        home-manager.lib.homeManagerConfiguration {
+      homeConfigurations = {
+        dwave = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [ ./home.nix ];
           extraSpecialArgs = {
@@ -36,9 +36,7 @@
             vaultAddr = "https://it-vault.dwavesys.local";
           };
         };
-
-      homeConfigurations.personal =
-        home-manager.lib.homeManagerConfiguration {
+        personal = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [ ./home.nix ];
           extraSpecialArgs = {
@@ -50,5 +48,6 @@
             vaultAddr = "https://vault.nikolaishields.com";
           };
         };
+      };
     };
 }
