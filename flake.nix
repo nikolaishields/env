@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration of nshields";
+  description = "Home Manager configuration of Nikolai Shields";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
@@ -23,7 +23,7 @@
           extraSpecialArgs = { inherit unstablePkgs; };
         } // args);
     in {
-      homeConfigurations."nshields@dwavesys.com" =
+      homeConfigurations.dwave =
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [ ./home.nix ];
@@ -37,12 +37,18 @@
           };
         };
 
-      #homeConfigurations.dwave = genHomeConfiguation {
-      #  extraSpecialArgs = {
-      #    username = "nshields";
-      #    email = "nshields@dwavesys.com";
-      #  };
-      #};
-      #inherit home-manager;
+      homeConfigurations.personal =
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ ./home.nix ];
+          extraSpecialArgs = {
+            inherit unstablePkgs;
+            name = "Nikolai Shields";
+            user = "nikolai";
+            githubUser = "nikolaishields";
+            email = "nikolai@nikolaishields.com";
+            vaultAddr = "https://vault.nikolaishields.com";
+          };
+        };
     };
 }
