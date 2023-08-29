@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+BRANCH=$1
+
+if [ -n "$BRANCH" ]
+then
+    if [ $(git branch -l) | grep $BRANCH]
+        git stash -u
+        git checkout -b "$BRANCH"
+        git stash pop
+    else
+        git stash -u
+        git switch -c "$BRANCH"
+        git stash pop
+    fi
+else
+    echo "Error: Branch name not specified"
+fi

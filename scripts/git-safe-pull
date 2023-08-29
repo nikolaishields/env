@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+git snapshot && git restore . && git fetch --all && git pull && git stash pop
