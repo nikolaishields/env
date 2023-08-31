@@ -23,7 +23,6 @@
           extraSpecialArgs = {
             inherit unstablePkgs;
             name = "Nikolai Shields";
-            user = "nshields";
             githubUser = "nikolaishields";
             email = "nshields@dwavesys.com";
             vaultAddr = "https://it-vault.dwavesys.local";
@@ -35,7 +34,6 @@
           extraSpecialArgs = {
             inherit unstablePkgs;
             name = "Nikolai Shields";
-            user = "nikolai";
             githubUser = "nikolaishields";
             email = "nikolai@nikolaishields.com";
             vaultAddr = "https://vault.nikolaishields.com";

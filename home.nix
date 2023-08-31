@@ -1,12 +1,12 @@
-{ config, pkgs, unstablePkgs, name, user, githubUser, email, vaultAddr, ... }: {
+{ config, pkgs, unstablePkgs, name, githubUser, email, vaultAddr, ... }: {
   targets.genericLinux.enable = true;
   home = {
     stateVersion = "23.05";
-    username = user;
-    homeDirectory = "/home/${user}";
+    username = builtins.getEnv "USER";
+    homeDirectory = builtins.getEnv "HOME";
     file = {
-      ".config/nvim/lua/${githubUser}" = {
-        source = ./nvim/lua/${githubUser};
+      ".config/nvim" = {
+        source = ./nvim;
         recursive = true;
       };
 
@@ -23,8 +23,6 @@
     cilium-cli
     ffmpeg
     file
-    fira-code-symbols
-    fira-code
     gnumake
     gum
     htop
@@ -131,7 +129,7 @@
         terraform-ls
       ];
 
-      extraConfig = builtins.readFile nvim/vimrc;
+      #extraConfig = builtins.readFile nvim/vimrc;
 
       plugins = with pkgs.vimPlugins; [
         nvim-treesitter
