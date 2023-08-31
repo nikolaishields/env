@@ -50,19 +50,10 @@ require("telescope").load_extension("fzy_native")
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("project")
 
-local M = {}
-M.search_src = function()
-    require("telescope.builtin").find_files({
-        prompt_title = "< Projects >",
-        cwd = "$HOME/Code/dwave",
-        hidden = false,
-    })
-end
-
 M.search_nixos_config = function()
     require("telescope.builtin").find_files({
         prompt_title = "< nixos config >",
-        cwd = "$HOME/Code/github.com/nikolaishields/nixos-config",
+        cwd = "$HOME/.config/home-manager",
         hidden = false,
     })
 end
