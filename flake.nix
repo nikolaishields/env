@@ -26,6 +26,8 @@
             githubUser = "nikolaishields";
             email = "nshields@dwavesys.com";
             vaultAddr = "https://it-vault.dwavesys.local";
+            graphical = true;
+            editor = true;
           };
         };
         personal = home-manager.lib.homeManagerConfiguration {
