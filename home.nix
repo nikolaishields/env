@@ -1,27 +1,58 @@
-{ config, pkgs, unstablePkgs, name, githubUser, email, vaultAddr, ... }: {
+{ config, pkgs, unstablePkgs, name, githubUser, email, graphical, editor, vaultAddr, ...
+}: {
   targets.genericLinux.enable = true;
   home = {
     stateVersion = "23.05";
     username = builtins.getEnv "USER";
     homeDirectory = builtins.getEnv "HOME";
-    file = {
-      ".config/nvim" = {
-        source = ./nvim;
-        recursive = true;
-      };
 
+    file = {
       ".local/bin" = { source = ./scripts; };
     };
   };
 
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+    extraConfig = {
+        XDG_SRC_DIR = "${config.home.homeDirectory}/Code";
+        XDG_SCRIPTS_DIR = "${config.home.homeDirectory}/.local/bin";
+    };
+  };  
+  
+  xdg.configFile = {
+    "nvim/lua" = {
+      enable = editor;
+      recursive = true;
+      source = ./nvim/lua;
+    };
+
+    "wezterm/" = {
+      enable = graphical;
+      recursive = true;
+      source = ./wezterm;
+    };
+  };
+
+  xdg.dataFile = {
+    ".local" = {
+      enable = editor;
+      recursive = true;
+      source = ./scripts;
+    };
+  };
+
+
+
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
-    unstablePkgs.fira-code-nerdfont
-    brave
-    entr
     cilium-cli
-    ffmpeg
+    go
+    packer
+    ansible
+    unstablePkgs.clusterctl
+    entr
     file
     gnumake
     gum
@@ -31,20 +62,20 @@
     krew
     kubectl
     kubernetes-helm
+    ovftool
     nixfmt
-    podman
     ranger
     ripgrep
     shellcheck
     shfmt
     sops
     sysz
-    tilix
     tealdeer
-    terraform
+    tmux
+    unstablePkgs.awscli2
+    unstablePkgs.fira-code-nerdfont
     vault
     whois
-    tmux
   ];
 
   programs = {
@@ -70,7 +101,7 @@
         EDITOR = "nvim";
         VAULT_ADDR = "https://it-vault.dwavesys.local";
         LD_PRELOAD = "/lib/x86_64-linux-gnu/libnss_sss.so.2";
-        PATH="$PATH:$HOME/.krew/bin:$HOME/.local/bin";
+        PATH = "$PATH:$HOME/.krew/bin:$HOME/.local/bin";
       };
     };
 
@@ -92,9 +123,8 @@
         EDITOR = "nvim";
         VAULT_ADDR = vaultAddr;
         LD_PRELOAD = "/lib/x86_64-linux-gnu/libnss_sss.so.2";
-        PATH="$PATH:$HOME/.krew/bin:$HOME/.local/bin";
+        PATH = "$PATH:$HOME/.tfenv/bin:$HOME/.krew/bin:$HOME/.local/bin:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
       };
-
 
       oh-my-zsh = {
         enable = true;
@@ -119,7 +149,7 @@
       enable = true;
       vimAlias = true;
       viAlias = true;
-      withPython3 =true;
+      withPython3 = true;
       extraPackages = with pkgs; [
         git
         gopls
@@ -128,8 +158,6 @@
         shfmt
         terraform-ls
       ];
-
-      #extraConfig = builtins.readFile nvim/vimrc;
 
       plugins = with pkgs.vimPlugins; [
         nvim-treesitter
@@ -164,14 +192,32 @@
         vim-nix
         telescope-project-nvim
       ];
+
+      extraLuaConfig = builtins.readFile nvim/init.lua;
+    };
+
+    wezterm = {
+      enable = false; # TODO: set to 'graphical' when wezterm is patched for wayland
+      package = unstablePkgs.wezterm;
+      extraConfig = builtins.readFile wezterm/wezterm.lua;
+    };
+
+    chromium = {
+      enable = graphical;
+      package = pkgs.brave;
+      extensions = [
+        { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; }
+        { id = "bfogiafebfohielmmehodmfbbebbbpei"; }
+        { id = "nngceckbapebfimnlniiiahkandclblb"; }
+      ];
     };
 
     git = {
       enable = true;
       aliases = {
         co = "checkout";
-        c  = "commit";
-        s  = "status";
+        c = "commit";
+        s = "status";
         ss = "snapshot";
         sp = "safe-pull";
         rl = "remote-log";
