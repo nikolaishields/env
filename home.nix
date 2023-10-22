@@ -1,11 +1,7 @@
-{ config, pkgs, unstablePkgs, name, githubUser, email, graphical, editor, vaultAddr, ...
-}: {
+{ config, pkgs, unstablePkgs, vaultAddr, ... }: {
   targets.genericLinux.enable = true;
   home = {
     stateVersion = "23.05";
-    username = builtins.getEnv "USER";
-    homeDirectory = builtins.getEnv "HOME";
-
     file = {
       ".local/bin" = { source = ./scripts; };
     };
@@ -22,13 +18,13 @@
   
   xdg.configFile = {
     "nvim/lua" = {
-      enable = editor;
+      enable = true;
       recursive = true;
       source = ./nvim/lua;
     };
 
     "wezterm/" = {
-      enable = graphical;
+      enable = true;
       recursive = true;
       source = ./wezterm;
     };
@@ -36,7 +32,7 @@
 
   xdg.dataFile = {
     ".local" = {
-      enable = editor;
+      enable = true;
       recursive = true;
       source = ./scripts;
     };
@@ -48,8 +44,9 @@
     cilium-cli
     go
     packer
+    podman
+    podman-compose
     ansible
-    unstablePkgs.clusterctl
     entr
     file
     gnumake
@@ -70,10 +67,13 @@
     sysz
     tealdeer
     tmux
-    unstablePkgs.awscli2
-    unstablePkgs.fira-code-nerdfont
     vault
     whois
+    zoom-us
+    slack
+    unstablePkgs.awscli2
+    unstablePkgs.clusterctl
+    unstablePkgs.fira-code-nerdfont
   ];
 
   programs = {
@@ -98,7 +98,6 @@
       sessionVariables = {
         EDITOR = "nvim";
         VAULT_ADDR = "https://it-vault.dwavesys.local";
-        LD_PRELOAD = "/lib/x86_64-linux-gnu/libnss_sss.so.2";
         PATH = "$PATH:$HOME/.krew/bin:$HOME/.local/bin";
       };
     };
@@ -120,7 +119,6 @@
       sessionVariables = {
         EDITOR = "nvim";
         VAULT_ADDR = vaultAddr;
-        LD_PRELOAD = "/lib/x86_64-linux-gnu/libnss_sss.so.2";
         PATH = "$PATH:$HOME/.tfenv/bin:$HOME/.krew/bin:$HOME/.local/bin:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
       };
 
@@ -132,12 +130,13 @@
       dirHashes = {
         Code = "$HOME/Code";
         work = "$HOME/Code/git.dwavesys.local";
-        nix = "$HOME/Code/github.com/${githubUser}/nixos-config";
+        #nix = "$HOME/Code/github.com/${githubUser}/nixos-config";
         dl = "$HOME/Downloads";
       };
 
     };
 
+    # TODO: auto-install tpm and run plugin install on first open
     tmux = {
       enable = true;
       extraConfig = builtins.readFile tmux/tmux.conf;
@@ -195,13 +194,13 @@
     };
 
     wezterm = {
-      enable = false; # TODO: set to 'graphical' when wezterm is patched for wayland
+      enable = true; # TODO: set to 'graphical' when wezterm is patched for wayland
       package = unstablePkgs.wezterm;
       extraConfig = builtins.readFile wezterm/wezterm.lua;
     };
 
     chromium = {
-      enable = graphical;
+      enable = true;
       package = pkgs.brave;
       extensions = [
         { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; }
@@ -222,8 +221,8 @@
         sb = "switch-to-branch";
       };
 
-      userName = name;
-      userEmail = email;
+      userName = "Nikolai Shields";
+      userEmail = "nshields@dwavesys.com";
       signing = {
         key = "~/.ssh/id_ed25519";
         signByDefault = true;
